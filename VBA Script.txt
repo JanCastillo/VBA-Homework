@@ -1,0 +1,90 @@
+Sub stockanalysis()
+Application.ScreenUpdating = False
+
+Dim total As Double
+Dim closeprice As Double
+Dim openprice As Double
+Dim summary As Integer
+
+lastrow = Cells(Rows.Count, 1).End(xlUp).Row
+
+total = 0
+summary = 2
+
+Cells(1, 9) = "Ticker"
+Cells(1, 10) = "Total Vol"
+Cells(1, 11) = "Yr Close"
+Cells(1, 12) = "Yr Open"
+Cells(1, 13) = "Yr Change"
+
+For i = 2 To lastrow
+
+    If Cells(i + 1, 1).Value <> Cells(i, 1) Then
+    
+    Stock = Cells(i, 1).Value
+    total = total + Cells(i, 7).Value
+    
+    Range("I" & summary).Value = Stock
+    Range("J" & summary).Value = total
+    
+    summary = summary + 1
+    total = 0
+    
+    Else
+
+    total = total + Cells(i, 7).Value
+    
+    End If
+    
+    If Cells(i, 2).Value = 20161230 Then
+    
+    closeprice = Cells(i + 1, 6).Value
+    
+    Range("L" & summary).Value = closeprice
+    
+    closeprice = 0
+    
+    Else
+    
+    closeprice = Cells(i + 1, 6).Value
+    Range("K" & summary).Value = closeprice
+    
+    End If
+    
+    If Cells(i, 2).Value = 20160101 Then
+    
+    openprice = Cells(i, 3).Value
+    
+    Range("L" & summary).Value = openprice
+    
+    openprice = 0
+    
+    Else
+    
+    openprice = openprice + Cells(i, 3).Value
+    
+    End If
+    
+Next i
+
+lastrow2 = Cells(Rows.Count, 9).End(xlUp).Row
+
+For x = 2 To lastrow2
+
+        Cells(x, 13) = Cells(x, 11) / Cells(x, 12) - 1
+        Cells(x, 13).NumberFormat = "0.00%"
+
+        If Cells(x, 13) >= 0 Then
+    
+        Cells(x, 13).Interior.ColorIndex = 4
+    
+        Else
+    
+        Cells(x, 13).Interior.ColorIndex = 3
+    
+        End If
+
+Next x
+
+Application.ScreenUpdating = True
+End Sub
